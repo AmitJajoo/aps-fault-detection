@@ -8,13 +8,14 @@ import pandas as pd
 from typing import Optional
 from sensor import utils
 import numpy as np
+from sensor.config import TARGET_COLUMN
 
 class DataValidation:
 
     def __init__(self,data_validation_config:config_entity.DataValidationConfig,
                 data_ingestion_artifact:artifact_entity.DataIngestionArtifact):
         try:
-            logging.info(f"{'<<'*20} Data Validation {'>>'*20}")
+            logging.info(f"{'>>'*20} Data Validation {'<<'*20}")
             self.data_validation_config = data_validation_config
             self.data_ingestion_artifact = data_ingestion_artifact
             self.validation_error = dict()
@@ -110,7 +111,7 @@ class DataValidation:
             logging.info(f"Dropping null values from test_df")
             test_df = self.drop_missing_values_column(df=test_df,report_key_name="missing_value_within_test_dataset")
 
-            exclude_column = ['class']
+            exclude_column = [TARGET_COLUMN]
             base_df=utils.convert_column_float(df=base_df, exclude_column=exclude_column)
             train_df=utils.convert_column_float(df=train_df, exclude_column=exclude_column)
             test_df=utils.convert_column_float(df=test_df, exclude_column=exclude_column)
