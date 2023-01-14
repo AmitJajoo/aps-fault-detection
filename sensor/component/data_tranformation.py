@@ -58,25 +58,33 @@ class DataTransformation:
 
         #transformation on target column
         target_feature_train_arr = label_encoder.transform(target_feature_train_df)
+        print(f"target_feature_train_arr {target_feature_train_arr}")
         target_feature_test_arr = label_encoder.transform(target_feature_test_df)
+        print(f"target_feature_test_arr {target_feature_test_arr}")
 
         transformation_pipeline = DataTransformation.get_data_transform_object()
         transformation_pipeline.fit(input_feature_train_df)
         #transforming input features
         input_feature_train_arr = transformation_pipeline.transform(input_feature_train_df)
+        logging.info(f"input_feature_train_arr {input_feature_train_arr}")
         input_feature_test_arr = transformation_pipeline.transform(input_feature_test_df)
+        logging.info(f"input_feature_test_arr {input_feature_test_arr}")
 
         smt = SMOTETomek(sampling_strategy = "minority")
         logging.info(f"Before resampling in training set input : {input_feature_train_arr.shape} Target: {target_feature_train_arr.shape}")
         logging.info(f"Before resampling in test set input : {input_feature_test_arr.shape} Target: {target_feature_test_arr.shape}")
+        
         input_feature_train_arr, target_feature_train_arr = smt.fit_resample(input_feature_train_arr,target_feature_train_arr)
         input_feature_test_arr, target_feature_test_arr = smt.fit_resample(input_feature_test_arr,target_feature_test_arr)
+        
         logging.info(f"After resampling in training set input : {input_feature_train_arr.shape} Target: {target_feature_train_arr.shape}")
         logging.info(f"After resampling in test set input : {input_feature_test_arr.shape} Target: {target_feature_test_arr.shape}")
 
         #target encoder
         train_arr = np.c_[input_feature_train_arr, target_feature_train_arr]
+        logging.info(f"data_transformation train_arr {train_arr}")
         test_arr = np.c_[input_feature_test_arr, target_feature_test_arr]
+        logging.info(f"data_transformation test_arr {test_arr}")
 
         #save numpy array
         utils.save_numpy_arr_data(file_path=self.data_transformation_config.transform_train_path, array=train_arr)
@@ -84,8 +92,12 @@ class DataTransformation:
 
         utils.save_object(file_path=self.data_transformation_config.transform_object_path, obj=transformation_pipeline)
 
-        utils.save_object(file_path=self.data_transformation_config.target_encoder_path, obj=label_encoder)
+        logging.info(f"transformation_pipeline {transformation_pipeline}")
+        print(f"transformation_pipeline {transformation_pipeline}")
 
+        utils.save_object(file_path=self.data_transformation_config.target_encoder_path, obj=label_encoder)
+        logging.info(f"label_encoder {label_encoder}")
+        print((f"label_encoder {label_encoder}"))
         data_transform_artifact = artifact_entity.DataTransformationArtifact(
             transform_object_path = self.data_transformation_config.transform_object_path, 
             transform_train_path = self.data_transformation_config.transform_train_path, 

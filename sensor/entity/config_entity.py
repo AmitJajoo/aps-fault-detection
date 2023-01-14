@@ -59,8 +59,8 @@ class DataTransformationConfig:
 
             self.data_transform_dir = os.path.join(training_config_pipeline.artifact_dir,"data_transformation")
             self.transform_object_path = os.path.join(self.data_transform_dir,"transformer","transform.pkl")
-            self.transform_train_path = os.path.join(self.data_transform_dir,"tranformed",TRAIN_FILE_NAME.replace("csv", "npz"))
-            self.transform_test_path = os.path.join(self.data_transform_dir,"transformed",TEST_FILE_NAME)
+            self.transform_train_path = os.path.join(self.data_transform_dir,"transformed",TRAIN_FILE_NAME.replace("csv", "npz"))
+            self.transform_test_path = os.path.join(self.data_transform_dir,"transformed",TEST_FILE_NAME.replace("csv", "npz"))
             self.target_encoder_path = os.path.join(self.data_transform_dir,"target_encoder",TARGET_ENCODER_OBJECT_FILE_NAME)
 
         except Exception as e:
@@ -76,5 +76,21 @@ class ModelTrainerConfig:
             self.overfiting_thresh = 0.1
         except Exception as e:
             raise SensorException(e, sys)   
-class ModelEvaluationConfig:...
-class ModelPusherConfig:...
+
+
+class ModelEvaluationConfig:
+    def __init__(self,training_config_pipeline:TrainingPipelineConfig):
+        self.change_threshold = 0.01
+
+class ModelPusherConfig:
+    def  __init__(self,training_config_pipeline:TrainingPipelineConfig):
+        try:
+            self.model_pusher_dir = os.path.join(training_config_pipeline.artifact_dir,"model_pusher")
+            self.saved_model_dir = os.path.join("saved_models")
+            self.pusher_model_dir = os.path.join(self.model_pusher_dir,"saved_models")
+
+            self.pusher_model_path = os.path.join(self.model_pusher_dir,MODEL_FILE_NAME)
+            self.pusher_transformer_path = os.path.join(self.model_pusher_dir,TRANSFORMER_OBJECT_FILE_NAME)
+            self.pusher_target_encoder_path = os.path.join(self.model_pusher_dir,TARGET_ENCODER_OBJECT_FILE_NAME)
+        except Exception as e:
+            raise SensorException(e, sys)

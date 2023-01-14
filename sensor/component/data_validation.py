@@ -47,7 +47,9 @@ class DataValidation:
             raise SensorException(e,sys)
 
     def is_required_column_exists(self,base_df:pd.DataFrame,current_df:pd.DataFrame,report_key_name:str)->bool:
-
+        """
+            checking number of column are equal in base df and train_df , test_df
+        """
         try:
             base_columns = base_df.columns
             current_columns = current_df.columns

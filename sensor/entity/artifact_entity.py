@@ -23,8 +23,16 @@ class ModelTrainerArtifact:
     model_path:str
     f1_train_score:str 
     f1_test_score:str  
-    
-class ModelEvaluationArtifact:...
-class ModelPusherArtifact:...
+
+
+@dataclass   
+class ModelEvaluationArtifact:
+    is_model_accepted:bool
+    improved_accuracy:float
+
+@dataclass
+class ModelPusherArtifact:
+    pusher_model_dir:str
+    saved_model_dir:str
 
 
